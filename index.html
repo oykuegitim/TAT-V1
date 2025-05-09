@@ -1,0 +1,128 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Öykü Eğitim & Danışmanlık Tatistoskop Çalışması</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: url('logo.png') no-repeat center center fixed;
+      background-size: contain;
+      padding: 2rem;
+    }
+    #countdown, #timer {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    #word {
+      font-size: 3rem;
+      margin: 1rem 0;
+    }
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1.5rem;
+      width: 300px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+    #result {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Öykü Eğitim & Danışmanlık Tatistoskop Çalışması</h1>
+  <div id="countdown">3</div>
+  <div id="timer">Süre: 02:00</div>
+  <div id="word">Kelime</div>
+  <input type="text" id="input" placeholder="Kelimeyi yaz..." disabled />
+  <button onclick="checkWord()" disabled>Kontrol Et</button>
+  <div id="result"></div>
+
+  <script>
+    const words = ["el", "ev", "ay", "su", "gül", "kalem", "kitap", "bahar", "defter", "çalışkan", "bilgisayar", "üniversite", "karanlık", "aydınlık", "merhamet", "gökyüzü", "istiklal", "arkadaşlık", "dayanışma", "sorumluluk"];
+    let index = 0;
+    let score = 0;
+    let timeLeft = 120;
+    let countdown = 3;
+    const countdownEl = document.getElementById("countdown");
+    const timerEl = document.getElementById("timer");
+    const wordEl = document.getElementById("word");
+    const inputEl = document.getElementById("input");
+    const resultEl = document.getElementById("result");
+    const button = document.querySelector("button");
+
+    function startExercise() {
+      const countdownInterval = setInterval(() => {
+        countdown--;
+        countdownEl.textContent = countdown;
+        if (countdown === 0) {
+          clearInterval(countdownInterval);
+          countdownEl.style.display = "none";
+          inputEl.disabled = false;
+          button.disabled = false;
+          showWord();
+          startTimer();
+        }
+      }, 1000);
+    }
+
+    function showWord() {
+      if (index < words.length) {
+        wordEl.textContent = words[index];
+        inputEl.value = "";
+        inputEl.focus();
+      } else {
+        finish();
+      }
+    }
+
+    function checkWord() {
+      const entered = inputEl.value.trim();
+      const correct = words[index];
+      if (entered === correct) {
+        score++;
+        resultEl.textContent = "Doğru!";
+        resultEl.style.color = "green";
+      } else {
+        resultEl.textContent = `Yanlış! Doğru: ${correct}`;
+        resultEl.style.color = "red";
+      }
+      index++;
+      showWord();
+    }
+
+    function startTimer() {
+      const timerInterval = setInterval(() => {
+        timeLeft--;
+        const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+        const seconds = String(timeLeft % 60).padStart(2, '0');
+        timerEl.textContent = `Süre: ${minutes}:${seconds}`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          finish();
+        }
+      }, 1000);
+    }
+
+    function finish() {
+      wordEl.textContent = "Çalışma tamamlandı!";
+      inputEl.disabled = true;
+      button.disabled = true;
+      resultEl.innerHTML = `<strong>Toplam Doğru: ${score} / ${words.length}</strong>`;
+      setTimeout(() => {
+        window.location.href = "https://sites.google.com/view/oykuegitimdanismanlik/ana-sayfa?authuser=0";
+      }, 5000);
+    }
+
+    startExercise();
+  </script>
+</body>
+</html>
